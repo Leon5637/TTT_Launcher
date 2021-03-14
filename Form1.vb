@@ -122,6 +122,7 @@ Public Class Form1
             Catch ex As System.IndexOutOfRangeException
                 If filecontent.Length <= index Then                                     'Falls die Konfigdatei nicht über genügend Zeilen verfügt
                     createNewConfig()
+
                     Form1_Load(Nothing, Nothing)
                     Exit Sub
                 End If
