@@ -96,9 +96,8 @@ Public Class Form1
         'Next
 
         Dim index As Integer = 0
-        Dim currentTb As TextBox
 
-        For Each currentTb In tb                                                        'schleife für alle 46 Textboxen durchgehen
+        For i As Integer = 0 To 45                                                   'schleife für alle 46 Textboxen durchgehen
             Try
                 'auf leerzeile oder Kommentarzeile prüfen
                 While filecontent(index).Trim = "" Or filecontent(index).Contains("//")      'so lange die schleife durchgehen bis weder Kommtar noch leerzeile und dabei schreibende zeile hochzählen (i2) 
@@ -111,12 +110,15 @@ Public Class Form1
                     filecontent(index) = filecontent(index).Substring(startIndex, endIndex - startIndex)
                 Else
                     filecontent(index) = filecontent(index).Split.Last
+                    If filecontent(index) = "" Then
+                        filecontent(index) = "-1"
+                    End If
                 End If
 
                 filecontent(index) = filecontent(index).TrimStart(""""c)
                 filecontent(index) = filecontent(index).TrimEnd(""""c)
 
-                currentTb.Text = filecontent(index)                                     'die höchgezählte Zeile in die Textbox schreiben
+                tb(i).Text = filecontent(index)                                     'die höchgezählte Zeile in die Textbox schreiben
                 index += 1
 
             Catch ex As System.IndexOutOfRangeException
@@ -127,8 +129,6 @@ Public Class Form1
                     Exit Sub
                 End If
             End Try
-
-
 
         Next
 
@@ -176,9 +176,15 @@ Public Class Form1
                 index += 1
             End While
 
+            If (filecontent(index) = "-1") Then
+                index += 1
+                Continue For
+            End If
+
+
             If i < 3 Then
-                value = filecontentOriginal(index).IndexOf(""""c)
-                filecontentOriginal(index) = filecontentOriginal(index).Remove(value, (filecontentOriginal(index).Length - (value))).Insert(value, """" + tb(i).Text + """")
+                value = filecontentOriginal(index).IndexOf(" ")
+                filecontentOriginal(index) = filecontentOriginal(index).Remove(value + 1, (filecontentOriginal(index).Length - (value + 1))).Insert(value + 1, """" + tb(i).Text + """")
             Else
                 value = filecontentOriginal(index).LastIndexOf(" ")                        'alles vor dem Leerzeichen, hinter welchem der Wert folgt entfernen
                 filecontentOriginal(index) = filecontentOriginal(index).Remove(value + 1, (filecontentOriginal(index).Length - (value + 1))).Insert(value + 1, tb(i).Text)
